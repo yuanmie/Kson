@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<json2xml>
+	<json>
+		<salary>100000.5</salary>
+		<cards>[1,22,333]</cards>
+		<disks>[1.1,2.0,22.0,3.0,44.0]</disks>
+		<name>bond</name>
+		<sex>male</sex>
+		<id>1111</id>
+		<age>20</age>
+	</json>
+</json2xml>

@@ -64,7 +64,7 @@ public class Parser {
     }
 
     private List<? extends Object> parse_array() {
-        List<Object> result = new ArrayList<>();
+        List<Object> result = new ArrayList<Object>();
         String t = token.peekToken();
         while(!t.equals("]")){
         	 Object o = parse_value();

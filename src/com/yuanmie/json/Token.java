@@ -123,32 +123,29 @@ public class Token {
                     if (ch == '0') {
 
                     } else {
-                        while (!eof() && isDigit(charArray[currIndex++])) {
-                            ;
+                        while (!eof() && isDigit(charArray[currIndex])) {
+                            currIndex++;
                         }
-                        if (!eof()) --currIndex;
                     }
                     if (!eof() && charArray[currIndex] == '.') {
-                        this.numberType = "float";
+                        this.numberType = "double";
                         ++currIndex;
-                        while (!eof() && isDigit(charArray[currIndex++])) {
-                            ;
+                        while (!eof() && isDigit(charArray[currIndex])) {
+                            currIndex++;
                         }
-                        if (!eof()) --currIndex;
+
                         if (!eof() && (charArray[currIndex] == 'e' || charArray[currIndex] == 'E')) {
                             ++currIndex;
                             if (!eof() && (charArray[currIndex] == '+' || charArray[currIndex] == '-')) {
                                 ++currIndex;
                             }
-                            while (!eof() && isDigit(charArray[currIndex++])) {
-                                ;
+                            while (!eof() && isDigit(charArray[currIndex])) {
+                                currIndex++;
                             }
-                            if(!eof()) currIndex -= 1;
-
                         }
                     }
                     return sign + text.substring(oldIndex, currIndex);
-                } else {
+                }else {
                     throw new RuntimeException("lex error!");
                 }
 

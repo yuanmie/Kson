@@ -41,9 +41,9 @@ public class TokenTest {
     }
 
     public void test(){
-        testPrimitive();
-        testBoolean();
-        testString();
+//        testPrimitive();
+//        testBoolean();
+//        testString();
         testNumber();
 
         print("success percent is " + (int)(((double)testcaseSuccess/testcaseCounter) * 100) + "%");
@@ -57,6 +57,7 @@ public class TokenTest {
        ++testcaseCounter;
         if(actual.equals(expect)){
             ++testcaseSuccess;
+            print("success at " + source + " expect is " +expect + " and actual is " + actual);
         }else{
             print("fail at " + source + " expect is " +expect + " and actual is " + actual);
         }
@@ -64,8 +65,8 @@ public class TokenTest {
 
     public void testNumber(){
         List<String> numberList = new ArrayList<String>();
-        numberList.add("0");
-        numberList.add("-0");
+//        numberList.add("0");
+//        numberList.add("-0");
         numberList.add("0.123");
         numberList.add("0.123E");
         numberList.add("0.e");
