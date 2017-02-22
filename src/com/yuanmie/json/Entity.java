@@ -9,18 +9,28 @@ public class Entity {
 	private Double three;
 	private List four;
 	private Map<String, Object> five;
+
+	public String getStr() {
+		return str;
+	}
+
+	public void setStr(String str) {
+		this.str = str;
+	}
+
+	private String str;
 	
 	
 	public Entity() {
 		super();
 	}
-	public boolean isOne() {
+	public boolean getOne() {
 		return one;
 	}
 	public void setOne(Boolean one) {
 		this.one = one;
 	}
-	public boolean isTwo() {
+	public boolean getTwo() {
 		return two;
 	}
 	public void setTwo(Boolean two) {
@@ -49,9 +59,9 @@ public class Entity {
 		return "one : " +  one.toString() +
 				"\ntwo : " + two.toString() + 
 				"\nthree : " + three.toString() + 
-				"\nfour : " + four.toString() + 
+				"\nfour : " + four.toString() +
+				"\nstr : " + str.toString() +
 				"\nfive : " + five.toString();
 	}
-	
-	
+
 }

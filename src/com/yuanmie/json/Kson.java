@@ -1,4 +1,5 @@
 package com.yuanmie.json;
+
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -14,6 +15,10 @@ public class Kson {
 		Map<String, Object> map = parser.parse();
 		
 		return map2class(map, clazz);
+	}
+
+	public String toJson(Object o){
+		return Java2Json.convert(o);
 	}
 	
 	public <T> T map2class(Map<String, Object> map, Class<T> clazz){

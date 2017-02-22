@@ -2,9 +2,6 @@ package com.yuanmie.json;
 
 import java.util.*;
 
-/**
- * Created by Administrator on 2016/11/19 0019.
- */
 public class Parser {
     private Token token;
 
@@ -44,7 +41,7 @@ public class Parser {
         }else if("number".equals(type)){
             if("int".equals(token.getNumberType())){
                 return Integer.parseInt(t);
-            }else if("float".equals(token.getNumberType())){
+            }else if("double".equals(token.getNumberType())){
                 return Double.parseDouble(t);
             }
         }else if("object".equals(type)){

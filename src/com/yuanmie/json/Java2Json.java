@@ -1,4 +1,4 @@
-package java2json;
+package com.yuanmie.json;
 
 import entity.Employee;
 import entity.PC;
@@ -40,7 +40,6 @@ public class Java2Json {
         // 获得Class对象
         Class<?> clazz = o.getClass();
         String className = clazz.getSimpleName();
-        System.out.println(className);
         String item;
         if(buildInClassList.contains(className)){
             if(className.equals("String")) return "\"" + o.toString() + "\"";

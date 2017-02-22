@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
-import java.lang.reflect.*;
 public class FieldUtil {
 	/**
 	 * 
@@ -44,7 +43,7 @@ public class FieldUtil {
 		return false;
 	}
 	
-	public static Field getFIeld(String fieldName, Class<?> clazz){
+	public static Field getField(String fieldName, Class<?> clazz){
 		Field[] fields = getAllField(clazz);
 		for(Field field : fields){
 			if(field.getName().contains(fieldName)){

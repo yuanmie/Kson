@@ -1,8 +1,8 @@
 package com.yuanmie.json;
 
-/**
- * Created by Administrator on 2016/11/18 0018.
- */
+
+import java.io.UnsupportedEncodingException;
+
 public class Token {
     private String text;
     private String type;
@@ -108,7 +108,7 @@ public class Token {
                 }
                 ++currIndex;
                 this.type = "string";
-                return text.substring(oldIndex, currIndex);
+                return dumpString(text.substring(oldIndex+1, currIndex-1));
 
             case '-':
                 sign = "-";
@@ -153,6 +153,35 @@ public class Token {
         return "";
     }
 
+     public String dumpString(String string) {
+        byte[] src = string.getBytes();
+        StringBuffer buf = new StringBuffer();
+        buf.append("\"");
+        for (int n = 0; n < src.length; n++) {
+            int c = toUnsigned(src[n]);
+            if (c == '"') buf.append("\\\"");
+            else if (isPrintable(c)) buf.append((char)c);
+            else if (c == '\b') buf.append("\\b");
+            else if (c == '\t') buf.append("\\t");
+            else if (c == '\n') buf.append("\\n");
+            else if (c == 013) buf.append("\\v");
+            else if (c == '\f') buf.append("\\f");
+            else if (c == '\r') buf.append("\\r");
+            else {
+                buf.append("\\" + Integer.toOctalString(c));
+            }
+        }
+        buf.append("\"");
+        return buf.toString();
+    }
+
+     private int toUnsigned(byte b) {
+        return b >= 0 ? b : 256 + b;
+    }
+
+     public boolean isPrintable(int c) {
+        return (' ' <= c) && (c <= '~');
+    }
     public Boolean eof() {
         return this.currIndex >= this.text_length;
     }

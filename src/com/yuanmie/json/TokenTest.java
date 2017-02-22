@@ -2,9 +2,6 @@ package com.yuanmie.json;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Administrator on 2016/11/18 0018.
- */
 public class TokenTest {
 
     private Token token;
