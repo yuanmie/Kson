@@ -3,8 +3,6 @@ package test;
 import entity.Entity;
 import com.yuanmie.json.Kson;
 
-import java.nio.charset.Charset;
-
 public class KsonTest {
 	public static void main(String args[]){
 		Kson kson = new Kson();

@@ -33,7 +33,7 @@ public class Java2Json {
      * @return json String
      */
     public static String convert(Object o) {
-        if(o == null) return null;
+        if(o == null) return "null";
 
         Class<?> clazz = o.getClass();
         String className = clazz.getSimpleName();
@@ -75,7 +75,7 @@ public class Java2Json {
                     item = String.format(template, convert(key),
                         convert(value));
                  */
-                item = String.format(template, key.toString(),
+                item = String.format(template, toString(key),
                         convert(value));
                 sb.append(item);
                 sb.append(",");
