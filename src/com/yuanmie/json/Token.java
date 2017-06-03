@@ -96,16 +96,83 @@ public class Token {
                 handle string
              */
             case '"':
-                oldIndex = currIndex;
-                while (!eof() && charArray[++currIndex] != '"') { }
+                StringBuffer buf = new StringBuffer();
+                buf.append("\"");
+                int c;
+                while (!eof() && ((c = charArray[++currIndex]) != '\"')) {
+                    switch(c){
+                        case '\\':
+                            c = charArray[++currIndex];
+                            switch(c){
+                                case '\"': buf.append('\"'); break;
+                                case '\\': buf.append('\\'); break;
+                                case '/':  buf.append('/' ); break;
+                                case 'b':  buf.append('\b'); break;
+                                case 'f':  buf.append('\f'); break;
+                                case 'n':  buf.append('\n'); break;
+                                case 'r':  buf.append('\r'); break;
+                                case 't':  buf.append('\t'); break;
+                                case 'u':
+                                    /*
+                                        handle unicode character
+                                     */
+                                    ++currIndex;
+                                    String code = text.substring(currIndex, currIndex + 4);
+                                    if(invalidCode(code)){
+                                        errorMessage("invalid unicode!!!");
+                                    }
+
+                                    int codePoint = computeCodePoint(code);
+                                    if(Character.isHighSurrogate((char)codePoint)){
+                                        currIndex += 4;
+                                        int highCodePoint = codePoint;
+                                        if(charArray[currIndex] == '\\' && charArray[currIndex + 1] == 'u'){
+                                            currIndex += 2;
+                                            String lowSurrogate = text.substring(currIndex, currIndex + 4);
+                                            if(invalidCode(lowSurrogate)){
+                                                errorMessage("invalid unicode!!!");
+                                            }
+                                            currIndex += 3;
+                                            int lowCodePoint = computeCodePoint(lowSurrogate);
+                                            if(Character.isLowSurrogate((char)lowCodePoint)){
+                                                if(Character.isSurrogatePair((char)highCodePoint, (char)lowCodePoint)){
+                                                    codePoint = Character.toCodePoint((char)highCodePoint, (char)lowCodePoint);
+                                                    buf.append(Character.toChars(codePoint));
+                                                }else{
+                                                    errorMessage("invalid unicode surrogatePair");
+                                                }
+                                            }else{
+                                                errorMessage("invalid unicode surrogatePair");
+                                            }
+                                        }else{
+                                            errorMessage("expect unicode");
+                                        }
+                                    }
+                                    else if(Character.isBmpCodePoint(codePoint)){
+                                        currIndex += 3;
+                                        buf.append(Character.toChars(codePoint));
+                                    }else{
+                                        errorMessage("invalid highSurrogate");
+                                    }
+                                    break;
+                            }
+                            break;
+                        default:
+                            if(isPrintable(c)){
+                                buf.append((char)c);
+                            }else{
+                                errorToken();
+                            }
+                    }
+                }
 
                 if(eof()){
                     throw new RuntimeException("string quote not correct end!");
                 }
-                String result = dumpString(text.substring(oldIndex+1, currIndex));
+                buf.append("\"");
                 this.type = "string";
                 ++currIndex;
-                return result;
+                return buf.toString();
 
             case '-':
                 sign = "-";
@@ -171,39 +238,42 @@ public class Token {
         return "";
     }
 
+    private boolean invalidCode(String code) {
+        boolean r = code.matches("[0-9a-fA-F]{4}");
+        return !r;
+    }
+
     private void errorToken() {
         throw new RuntimeException("invalid token at " + currIndex);
     }
-
-    public String dumpString(String string) {
-        byte[] src = string.getBytes();
-        StringBuffer buf = new StringBuffer();
-        buf.append("\"");
-        for (int n = 0; n < src.length; n++) {
-            int c = toUnsigned(src[n]);
-            if (c == '"') buf.append("\\\"");
-            else if (isPrintable(c)) buf.append((char)c);
-            else if (c == '\b') buf.append("\\b");
-            else if (c == '\t') buf.append("\\t");
-            else if (c == '\n') buf.append("\\n");
-            else if (c == 013) buf.append("\\v");
-            else if (c == '\f') buf.append("\\f");
-            else if (c == '\r') buf.append("\\r");
-            else {
-                buf.append("\\" + Integer.toOctalString(c));
-            }
-        }
-        buf.append("\"");
-        return buf.toString();
+    private void errorMessage(String message) {
+        throw new RuntimeException(message + " at " + currIndex);
     }
 
-    private int toUnsigned(byte b) {
-        return b >= 0 ? b : 256 + b;
-    }
-
-    public boolean isPrintable(int c) {
+    private boolean isPrintable(int c) {
         return (' ' <= c) && (c <= '~');
     }
+
+    private boolean isValidHex(final int c) {
+        int lc = Character.toLowerCase(c);
+        return (('0' <= lc) && (lc <= '9')) || 'a' <= lc && lc <= 'f';
+    }
+
+    private static int computeCodePoint(String s) {
+
+        char[] chars = s.toCharArray();
+        char cc = 0;
+
+        for (int j = 0; j < 4; j++) {
+            cc <<= 4;
+            char ch = Character.toLowerCase(chars[j]);
+            if ('0' <= ch && ch <= '9' || 'a' <= ch && ch <= 'f') {
+                cc |= Character.digit(ch, 16);
+            }
+        }
+        return cc;
+    }
+
     public Boolean eof() {
         return this.currIndex >= this.text_length;
     }
