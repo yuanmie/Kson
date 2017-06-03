@@ -1,4 +1,6 @@
-package com.yuanmie.json;
+package test;
+import com.yuanmie.json.Token;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -10,10 +10,14 @@ public class Kson {
 		Token token = new Token("");
 		parser = new Parser(token);
 	}
-	public <T> T fromJson(String json, Class<T> clazz){
+
+	public Map<String, Object> fromJsonToMap(String json){
 		parser.reset(json);
-		Map<String, Object> map = parser.parse();
-		
+		return parser.parse();
+	}
+
+	public <T> T fromJson(String json, Class<T> clazz){
+		Map<String, Object> map = fromJsonToMap(json);
 		return map2class(map, clazz);
 	}
 
@@ -21,7 +25,7 @@ public class Kson {
 		return Java2Json.convert(o);
 	}
 	
-	public <T> T map2class(Map<String, Object> map, Class<T> clazz){
+	private <T> T map2class(Map<String, Object> map, Class<T> clazz){
 		T object = null;
 		try {
 			object = clazz.newInstance();
@@ -29,9 +33,11 @@ public class Kson {
 			String fieldName;
 			for(Field field : fields){
 				field.setAccessible(true);
-				
 				fieldName = field.getName();
 				Object value = map.get(fieldName);
+				/*
+				if there use setter , maybe count on java autobox problem.
+				 */
 				field.set(object, value);
 			}
 		} catch (InstantiationException e) {
@@ -39,10 +45,8 @@ public class Kson {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		return object;

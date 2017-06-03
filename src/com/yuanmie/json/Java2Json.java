@@ -4,6 +4,9 @@ import util.FieldUtil;
 import java.lang.reflect.*;
 import java.util.*;
 
+/*
+    TODO: 17-6-3 fix up nullpoint exception
+ */
 public class Java2Json {
     private static List<String> buildInTypeList;
     private static String template = "\"%s\":%s";
@@ -141,7 +144,7 @@ public class Java2Json {
                 if (className.equals("String")) {
                     listString.append("\"" + o.toString() + "\",");
                 } else {
-                    listString.append(o.toString() + ",");
+                    listString.append(toString(o) + ",");
                 }
             }else {
                 listString.append(convert(o) + ",");
@@ -162,7 +165,7 @@ public class Java2Json {
                 if (className.equals("String")) {
                     arrayString.append("\"" + o.toString() + "\",");
                 } else {
-                    arrayString.append(o.toString() + ",");
+                    arrayString.append(toString(o) + ",");
                 }
             } else {
                 arrayString.append(convert(o) + ",");
@@ -171,5 +174,9 @@ public class Java2Json {
         arrayString.append("]");
         arrayString.deleteCharAt(arrayString.lastIndexOf(","));
         return arrayString.toString();
+    }
+
+    private static String toString(Object o){
+        return o == null ? "null" : o.toString();
     }
 }
