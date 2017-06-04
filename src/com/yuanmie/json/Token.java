@@ -32,8 +32,12 @@ public class Token {
     }
 
     public String nextToken() {
-        if (eof()) return "";
 
+        while(!eof() && isSpace(charArray[currIndex])){
+            ++currIndex;
+        }
+
+        if (eof()) return "";
         char ch = charArray[currIndex];
         String sign = "";
         int oldIndex = 0;
@@ -252,6 +256,10 @@ public class Token {
 
     private boolean isPrintable(int c) {
         return (' ' <= c) && (c <= '~');
+    }
+
+    private boolean isSpace(int c) {
+        return (c == ' ') || (c == '\t');
     }
 
     private boolean isValidHex(final int c) {

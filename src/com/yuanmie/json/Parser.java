@@ -84,19 +84,24 @@ public class Parser {
             The value will lose a token information if here is nextToken.
          */
         String t = token.peekToken();
-        while(!t.equals("]")){
-             Object o = parse_value();
-             result.add(o);
-             t = token.nextToken();
-             if(t.equals("]")){
-                 break;
-             }
-             if(!t.equals(",")){
-                 throw new RuntimeException("Syntax error!!!");
-             }
+        if(t.equals("]")){
+            token.nextToken();
+        }else{
+            while(!t.equals("]")){
+                Object o = parse_value();
+                result.add(o);
+                t = token.nextToken();
+                if(t.equals("]")){
+                    break;
+                }
+                if(!t.equals(",")){
+                    throw new RuntimeException("Syntax error!!!");
+                }
 
-            t = token.peekToken();
+                t = token.peekToken();
+            }
         }
+
 
         if(!t.equals("]")){
             throw new RuntimeException("the array not correct end!");
